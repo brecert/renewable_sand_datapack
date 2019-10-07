@@ -1,0 +1,1 @@
+execute as @e[type=minecraft:falling_block,nbt={BlockState:{Name:"minecraft:anvil"}}] at @s run function renewable_sand:as/1
