@@ -24,4 +24,11 @@ cobblestone will turned into gravel when crushed
 
 gravel will turn into sand when crushed
 
+for consistency with this new mechanic some other blocks can be crushed
+<details><summary>spoilers</summary><p>
+
+- stone bricks can be crusted into cracked stone brickes, this includes infested ones
+
+</p></details>
+
 </p></details>
