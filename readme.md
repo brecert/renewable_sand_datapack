@@ -14,7 +14,7 @@ Goals
 ## Mechanics Added
 <details><summary>spoilers</summary><p>
 
-### anvils
+### Anvil Crushing
 > anvils will now crush cobblestone and gravel
 
 when an anvil falls on a cobblestone or gravel block 
