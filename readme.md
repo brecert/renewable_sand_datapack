@@ -27,7 +27,7 @@ gravel will turn into sand when crushed
 for consistency with this new mechanic some other blocks can be crushed
 <details><summary>spoilers</summary><p>
 
-- stone bricks can be crusted into cracked stone brickes, this includes infested ones
+- stone bricks can be crushed into cracked stone brickes, this includes infested ones
 
 </p></details>
 
