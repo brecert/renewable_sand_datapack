@@ -29,6 +29,8 @@ for consistency with this new mechanic some other blocks can be crushed
 
 - stone bricks can be crushed into cracked stone brickes, this includes infested ones
 
+- concrete blocks will be crushed into concrete powder
+
 </p></details>
 
 </p></details>
