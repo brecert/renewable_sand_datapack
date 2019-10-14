@@ -1,1 +1,1 @@
-execute as @e[type=minecraft:falling_block,nbt={BlockState:{Name:"minecraft:anvil"}}] at @s run function renewable_sand:as/1
+execute as @e[type=minecraft:falling_block,nbt={BlockState:{Name:"minecraft:anvil"}}] at @s if block ~ ~-0.7 ~ #renewable_sand:crushable run function renewable_sand:crush_block

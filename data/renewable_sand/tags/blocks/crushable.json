@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cobblestone",
+    "minecraft:gravel",
+    "minecraft:stone_bricks",
+    "minecraft:infested_stone_bricks",
+    "#renewable_sand:concrete"
+  ]
+}
