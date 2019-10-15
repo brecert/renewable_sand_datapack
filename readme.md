@@ -11,6 +11,9 @@ Goals
 - the process should contain boundries to be overcome if it is to be automated
 - the mechanic should feel vanillaish as possible
 
+Building
+- `deno macro.ts`
+
 ## Mechanics Added
 <details><summary>spoilers</summary><p>
 
