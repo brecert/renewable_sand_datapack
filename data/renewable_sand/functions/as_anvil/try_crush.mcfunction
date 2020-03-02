@@ -54,7 +54,7 @@ execute if score @s fall_distance matches 2.. if score @s motion_y matches ..-59
 execute if score @s fall_distance matches 2.. if score @s motion_y matches ..-59 if block ~ ~-1 ~ minecraft:stone_bricks run function renewable_sand:crush/stone_bricks_to_cracked_stone_bricks
 
 
-execute if score @s fall_distance matches 2.. if score @s motion_y matches ..-55 if block ~ ~-1 ~ minecraft:gravel run function renewable_sand:crush/gravel_to_sand
+execute if score @s fall_distance matches 2.. if score @s motion_y matches ..-42 if block ~ ~-1 ~ minecraft:gravel run function renewable_sand:crush/gravel_to_sand
 
 
 execute if score @s fall_distance matches 2.. if score @s motion_y matches ..-42 if block ~ ~-1 ~ minecraft:cobblestone run function renewable_sand:crush/cobblestone_to_gravel

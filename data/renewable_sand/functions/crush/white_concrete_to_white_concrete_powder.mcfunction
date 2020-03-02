@@ -5,5 +5,4 @@ function renewable_sand:crush_effect
 particle block minecraft:white_concrete ~ ~0.3 ~ 0.1 0.1 0.1 1 3
 
 
-say @s is crushing white_concrete_to_white_concrete_powder.mcfunction
 tag @s add has_crushed

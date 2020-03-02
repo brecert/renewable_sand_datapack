@@ -8,5 +8,4 @@ particle minecraft:poof ~ ~0.3 ~ 0.1 0.1 0.1 0.05 5 normal
 particle block minecraft:cobblestone ~ ~0.3 ~ 0.1 0.1 0.1 1 25
 particle block minecraft:gravel ~ ~0.3 ~ 0.1 0.1 0.1 1 5
 
-say @s is crushing cobblestone_to_gravel.mcfunction
 tag @s add has_crushed

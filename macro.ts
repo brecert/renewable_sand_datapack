@@ -105,7 +105,7 @@ const crushables: ICrushable[] = [
 	{
 		fromBlock: 'minecraft:gravel',
 		toBlock: 'minecraft:sand',
-		fallSpeed: -55,
+		fallSpeed: -42,
 		fallDistance: 2,
 		legacyCode: `
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:sand replace minecraft:gravel
@@ -195,7 +195,7 @@ function writeBlockCrushFunctions() {
 		const code = c.legacyCode !== undefined ? stripIndents(c.legacyCode) : stripIndents(codeTemplate(c.toBlock, c.fromBlock, c.fromBlock, c.customCode || ""))
 		const path = `${NAMESPACE_FOLDER}/functions/crush/${file}`
 
-		writeFile(path, `${code}\nsay @s is crushing ${file}\ntag @s add has_crushed`)
+		writeFile(path, `${code}\ntag @s add has_crushed`)
 	})
 }
 
@@ -232,7 +232,6 @@ function writeCrushableTag() {
 function writeMainFunction() {
 	const path = `${NAMESPACE_FOLDER}/functions/main_tick.mcfunction`
 	const code = `
-		execute as @e[tag=has_crushed] run say @s
 		execute as @e[type=minecraft:falling_block,nbt={BlockState:{Name:"minecraft:anvil"}},tag=!has_crushed] at @s if block ~ ~${block_distance} ~ #renewable_sand:crushable run function renewable_sand:as_anvil/try_crush
 	`
 
