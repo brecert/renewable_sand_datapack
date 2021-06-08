@@ -1,4 +1,4 @@
-type PlaceholderType = typeof Number | typeof String | typeof Object | typeof JSON | string | number | any
+type PlaceholderType = typeof Number | typeof String | typeof Object | typeof JSON | string | number
 
 function fmt(strings: TemplateStringsArray, ...placeholderTypes: PlaceholderType[]) {
 	const constIndexes = placeholderTypes.map((p, i) => {
@@ -7,7 +7,7 @@ function fmt(strings: TemplateStringsArray, ...placeholderTypes: PlaceholderType
 		}
 	}).filter(p => p !== undefined)
 
-	return function(...placeholders: any) {
+	return function(...placeholders: unknown[]) {
 		let offset = 0;
 
 		return strings.map((s, i) => {
@@ -57,17 +57,10 @@ const MINECRAFT_COLORS = new Set([
 	"black"
 ])
 
-const BLOCK_NOISES = {
-	sand: ["sand"],
-	anvil: ["metal", "anvil"],
-	stone: ["stone"],
-	gravel: ["gravel"],
-	cobblestone: ["stone"]
-}
-
 const MINECRAFT_NAMESPACE = 'renewable_sand'
 const NAMESPACE_FOLDER = `data/${MINECRAFT_NAMESPACE}`
 
+// deno-lint-ignore camelcase
 const block_distance = -1
 
 interface ICrushable {
@@ -162,21 +155,6 @@ Array.from(MINECRAFT_COLORS.values())
 
 crushables.reverse()
 
-
-const textencoder = new TextEncoder()
-async function writeFile(path: string, data: string) {
-	const sections = path.split('/')
-	const fileName = sections.splice(sections.length - 1, 1)
-	const filePath = sections.join('/')
-
-	// console.log()
-	// console.log('#', fileName)
-	// console.log(data)
-
-	await Deno.mkdir(filePath, true)
-	await Deno.writeFile(path, textencoder.encode(data))
-}
-
 function generateFunctionName(crushable: ICrushable) {
 	return `${crushable.fromBlock.split(':')[1]}_to_${crushable.toBlock.split(':')[1]}`
 }
@@ -195,7 +173,7 @@ function writeBlockCrushFunctions() {
 		const code = c.legacyCode !== undefined ? stripIndents(c.legacyCode) : stripIndents(codeTemplate(c.toBlock, c.fromBlock, c.fromBlock, c.customCode || ""))
 		const path = `${NAMESPACE_FOLDER}/functions/crush/${file}`
 
-		writeFile(path, `${code}\ntag @s add has_crushed`)
+		Deno.writeTextFile(path, `${code}\ntag @s add has_crushed`)
 	})
 }
 
@@ -218,7 +196,7 @@ function writeBlockCrushSwitch() {
 		return caseCode
 	}).join('\n')
 	
-	writeFile(path, stripIndents(codeTemplate(cases)))
+	Deno.writeTextFile(path, stripIndents(codeTemplate(cases)))
 }
 
 function writeCrushableTag() {
@@ -226,7 +204,7 @@ function writeCrushableTag() {
 	const vals = crushables.map(c => c.fromBlock)
 	const json = { replace: false, values: vals }
 
-	writeFile(path, JSON.stringify(json))
+	Deno.writeTextFile(path, JSON.stringify(json))
 }
 
 function writeMainFunction() {
@@ -235,7 +213,7 @@ function writeMainFunction() {
 		execute as @e[type=minecraft:falling_block,nbt={BlockState:{Name:"minecraft:anvil"}},tag=!has_crushed] at @s if block ~ ~${block_distance} ~ #renewable_sand:crushable run function renewable_sand:as_anvil/try_crush
 	`
 
-	writeFile(path, stripIndents(code))
+	Deno.writeTextFile(path, stripIndents(code))
 }
 
 writeBlockCrushFunctions()
