@@ -54,7 +54,8 @@ const MINECRAFT_COLORS = new Set([
 	"brown",
 	"green",
 	"red",
-	"black"
+	"black",
+	"pink"
 ])
 
 const MINECRAFT_NAMESPACE = 'renewable_sand'
@@ -68,7 +69,6 @@ interface ICrushable {
 	toBlock: string
 	fallSpeed: number
 	fallDistance: number
-	legacyCode?: string
 	customCode?: string
 }
 
@@ -78,13 +78,19 @@ const crushables: ICrushable[] = [
 		toBlock: 'minecraft:cobblestone',
 		fallSpeed: -42,
 		fallDistance: 2,
+		customCode: `
+			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:cobblestone replace minecraft:stone
+			function renewable_sand:concrete_crush_sound
+			function renewable_sand:crush_effect
+			particle block minecraft:stone ~ ~0.3 ~ 0.1 0.1 0.1 1 3
+		`
 	},
 	{
 		fromBlock: 'minecraft:cobblestone',
 		toBlock: 'minecraft:gravel',
 		fallSpeed: -42,
 		fallDistance: 2,
-		legacyCode: `
+		customCode: `
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:gravel replace minecraft:cobblestone
 			playsound minecraft:block.gravel.place block @a ~ ~ ~ 1 0.5
 			playsound minecraft:block.stone.break block @s ~ ~ ~ 1 1
@@ -100,7 +106,7 @@ const crushables: ICrushable[] = [
 		toBlock: 'minecraft:sand',
 		fallSpeed: -42,
 		fallDistance: 2,
-		legacyCode: `
+		customCode: `
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:sand replace minecraft:gravel
 			playsound minecraft:block.gravel.break block @a ~ ~ ~ 1 0.5
 			playsound minecraft:block.sand.place block @a ~ ~ ~ 2 0.9
@@ -114,7 +120,7 @@ const crushables: ICrushable[] = [
 		toBlock: 'minecraft:cracked_stone_bricks',
 		fallSpeed: -59,
 		fallDistance: 2,
-		legacyCode: `
+		customCode: `
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:cracked_stone_bricks replace minecraft:stone_bricks
 			playsound minecraft:block.stone.break block @a ~ ~ ~ 0.8 1
 			playsound minecraft:block.metal.place block @a ~ ~ ~ 0.9 0.9
@@ -129,7 +135,7 @@ const crushables: ICrushable[] = [
 		toBlock: 'minecraft:infested_cracked_stone_bricks',
 		fallSpeed: -59,
 		fallDistance: 2,
-		legacyCode: `
+		customCode: `
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:infested_cracked_stone_bricks replace minecraft:infested_stone_bricks
 			playsound minecraft:block.stone.break block @a ~ ~ ~ 0.8 1
 			playsound minecraft:block.metal.place block @a ~ ~ ~ 0.9 0.9
@@ -170,7 +176,8 @@ function writeBlockCrushFunctions() {
 
 	crushables.forEach(c => {
 		const file = `${generateFunctionName(c)}.mcfunction`
-		const code = c.legacyCode !== undefined ? stripIndents(c.legacyCode) : stripIndents(codeTemplate(c.toBlock, c.fromBlock, c.fromBlock, c.customCode || ""))
+		const code = c.customCode !== undefined ? stripIndents(c.customCode) : stripIndents(codeTemplate(c.toBlock, c.fromBlock, c.fromBlock, c.customCode || ""))
+		console.log(code)
 		const path = `${NAMESPACE_FOLDER}/functions/crush/${file}`
 
 		Deno.writeTextFile(path, `${code}\ntag @s add has_crushed`)

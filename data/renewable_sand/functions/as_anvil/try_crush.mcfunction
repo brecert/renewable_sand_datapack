@@ -3,6 +3,9 @@ execute store result score @s fall_distance run data get entity @s FallDistance 
 execute store result score @s motion_y run data get entity @s Motion[1] 100
 
 
+execute if score @s fall_distance matches 2.. if score @s motion_y matches ..0 if block ~ ~-1 ~ minecraft:pink_concrete run function renewable_sand:crush/pink_concrete_to_pink_concrete_powder
+
+
 execute if score @s fall_distance matches 2.. if score @s motion_y matches ..0 if block ~ ~-1 ~ minecraft:black_concrete run function renewable_sand:crush/black_concrete_to_black_concrete_powder
 
 
