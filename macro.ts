@@ -1,54 +1,3 @@
-type PlaceholderType =
-  | typeof Number
-  | typeof String
-  | typeof Object
-  | typeof JSON
-  | string
-  | number;
-
-function fmt(
-  strings: TemplateStringsArray,
-  ...placeholderTypes: PlaceholderType[]
-) {
-  const constIndexes = placeholderTypes
-    .map((p, i) => {
-      if (p !== Number && p !== String && p !== Object && p !== JSON) {
-        return i;
-      }
-    })
-    .filter((p) => p !== undefined);
-
-  return function (...placeholders: unknown[]) {
-    let offset = 0;
-
-    return strings
-      .map((s, i) => {
-        const formatted = () => {
-          switch (true) {
-            case constIndexes.includes(i): {
-              offset += 1;
-              return placeholderTypes[i];
-            }
-            case placeholderTypes[i] === JSON ||
-              placeholderTypes[i] === Object: {
-              return JSON.stringify(placeholders[i]);
-            }
-            case placeholderTypes[i] === Number ||
-              placeholderTypes[i] === String: {
-              return `${placeholders[i - offset]}`;
-            }
-            default: {
-              return placeholders[i - offset] || "";
-            }
-          }
-        };
-
-        return `${s}${formatted()}`;
-      })
-      .join("");
-  };
-}
-
 function stripIndents(str: string) {
   return str.replace(/^[^\S\n]+/gm, "");
 }
@@ -181,12 +130,12 @@ function generateFunctionName(crushable: ICrushable) {
 }
 
 function writeBlockCrushFunctions() {
-  const codeTemplate = fmt`
-  	fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ ${String} replace ${String}
+  const codeTemplate = (c: ICrushable) => `
+  	fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ ${c.toBlock} replace ${c.fromBlock}
   	function renewable_sand:concrete_crush_sound
   	function renewable_sand:crush_effect
-  	particle block ${String} ~ ~0.3 ~ 0.1 0.1 0.1 1 3
-  	${String}
+  	particle block ${c.fromBlock} ~ ~0.3 ~ 0.1 0.1 0.1 1 3
+  	${c.customCode ?? ''}
 	`;
 
   crushables.forEach((c) => {
@@ -194,15 +143,8 @@ function writeBlockCrushFunctions() {
     const code =
       c.customCode !== undefined
         ? stripIndents(c.customCode)
-        : stripIndents(
-            codeTemplate(
-              c.toBlock,
-              c.fromBlock,
-              c.fromBlock,
-              c.customCode || ""
-            )
-          );
-    console.log(code);
+        : stripIndents(codeTemplate(c));
+
     const path = `${NAMESPACE_FOLDER}/functions/crush/${file}`;
 
     Deno.writeTextFile(path, `${code}\ntag @s add has_crushed`);
@@ -212,30 +154,28 @@ function writeBlockCrushFunctions() {
 function writeBlockCrushSwitch() {
   const path = `${NAMESPACE_FOLDER}/functions/as_anvil/try_crush.mcfunction`;
 
-  const caseTemplate = fmt`
-		execute if score @s fall_distance matches ${Number}.. if score @s motion_y matches ..${Number} if block ~ ~${block_distance} ~ ${String} run function ${MINECRAFT_NAMESPACE}:crush/${String}
-	`;
-
-  const codeTemplate = fmt`
-		execute store result score @s fall_distance run data get entity @s FallDistance 1
-		execute store result score @s motion_y run data get entity @s Motion[1] 100
-
-		${String}
-	`;
-
   const cases = crushables
     .map((c) => {
-      const caseCode = caseTemplate(
-        c.fallDistance,
-        c.fallSpeed,
-        c.fromBlock,
-        generateFunctionName(c)
-      );
+      const caseCode = `
+				execute if score @s fall_distance matches ${
+          c.fallDistance
+        }.. if score @s motion_y matches ..${
+        c.fallSpeed
+      } if block ~ ~${block_distance} ~ ${
+        c.fromBlock
+      } run function ${MINECRAFT_NAMESPACE}:crush/${generateFunctionName(c)}
+			`;
       return caseCode;
     })
     .join("\n");
 
-  Deno.writeTextFile(path, stripIndents(codeTemplate(cases)));
+  const code = `
+		execute store result score @s fall_distance run data get entity @s FallDistance 1
+		execute store result score @s motion_y run data get entity @s Motion[1] 100
+		${cases}
+	`;
+
+  Deno.writeTextFile(path, stripIndents(code));
 }
 
 function writeCrushableTag() {
