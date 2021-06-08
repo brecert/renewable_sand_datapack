@@ -1,4 +1,3 @@
-
 fill ~ ~-1 ~ ~ ~-1 ~ minecraft:gravel replace minecraft:cobblestone
 playsound minecraft:block.gravel.place block @a ~ ~ ~ 1 0.5
 playsound minecraft:block.stone.break block @s ~ ~ ~ 1 1

@@ -1,1 +1,26 @@
-{"replace":false,"values":["minecraft:pink_concrete","minecraft:black_concrete","minecraft:red_concrete","minecraft:green_concrete","minecraft:brown_concrete","minecraft:blue_concrete","minecraft:purple_concrete","minecraft:cyan_concrete","minecraft:light_gray_concrete","minecraft:gray_concrete","minecraft:lime_concrete","minecraft:yellow_concrete","minecraft:light_blue_concrete","minecraft:magenta_concrete","minecraft:orange_concrete","minecraft:white_concrete","minecraft:infested_stone_bricks","minecraft:stone_bricks","minecraft:gravel","minecraft:cobblestone","minecraft:stone"]}
+{
+  "replace": false,
+  "values": [
+    "minecraft:pink_concrete",
+    "minecraft:black_concrete",
+    "minecraft:red_concrete",
+    "minecraft:green_concrete",
+    "minecraft:brown_concrete",
+    "minecraft:blue_concrete",
+    "minecraft:purple_concrete",
+    "minecraft:cyan_concrete",
+    "minecraft:light_gray_concrete",
+    "minecraft:gray_concrete",
+    "minecraft:lime_concrete",
+    "minecraft:yellow_concrete",
+    "minecraft:light_blue_concrete",
+    "minecraft:magenta_concrete",
+    "minecraft:orange_concrete",
+    "minecraft:white_concrete",
+    "minecraft:infested_stone_bricks",
+    "minecraft:stone_bricks",
+    "minecraft:gravel",
+    "minecraft:cobblestone",
+    "minecraft:stone"
+  ]
+}

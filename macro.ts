@@ -1,6 +1,4 @@
-function stripIndents(str: string) {
-  return str.replace(/^[^\S\n]+/gm, "");
-}
+import { dedent } from "https://raw.githubusercontent.com/Brecert/dedent-deno/main/dedent.ts";
 
 const MINECRAFT_COLORS = new Set([
   "white",
@@ -41,7 +39,7 @@ const crushables: ICrushable[] = [
     toBlock: "minecraft:cobblestone",
     fallSpeed: -42,
     fallDistance: 2,
-    customCode: `
+    customCode: dedent`
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:cobblestone replace minecraft:stone
 			function renewable_sand:concrete_crush_sound
 			function renewable_sand:crush_effect
@@ -53,7 +51,7 @@ const crushables: ICrushable[] = [
     toBlock: "minecraft:gravel",
     fallSpeed: -42,
     fallDistance: 2,
-    customCode: `
+    customCode: dedent`
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:gravel replace minecraft:cobblestone
 			playsound minecraft:block.gravel.place block @a ~ ~ ~ 1 0.5
 			playsound minecraft:block.stone.break block @s ~ ~ ~ 1 1
@@ -69,7 +67,7 @@ const crushables: ICrushable[] = [
     toBlock: "minecraft:sand",
     fallSpeed: -42,
     fallDistance: 2,
-    customCode: `
+    customCode: dedent`
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:sand replace minecraft:gravel
 			playsound minecraft:block.gravel.break block @a ~ ~ ~ 1 0.5
 			playsound minecraft:block.sand.place block @a ~ ~ ~ 2 0.9
@@ -83,7 +81,7 @@ const crushables: ICrushable[] = [
     toBlock: "minecraft:cracked_stone_bricks",
     fallSpeed: -59,
     fallDistance: 2,
-    customCode: `
+    customCode: dedent`
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:cracked_stone_bricks replace minecraft:stone_bricks
 			playsound minecraft:block.stone.break block @a ~ ~ ~ 0.8 1
 			playsound minecraft:block.metal.place block @a ~ ~ ~ 0.9 0.9
@@ -98,7 +96,7 @@ const crushables: ICrushable[] = [
     toBlock: "minecraft:infested_cracked_stone_bricks",
     fallSpeed: -59,
     fallDistance: 2,
-    customCode: `
+    customCode: dedent`
 			fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ minecraft:infested_cracked_stone_bricks replace minecraft:infested_stone_bricks
 			playsound minecraft:block.stone.break block @a ~ ~ ~ 0.8 1
 			playsound minecraft:block.metal.place block @a ~ ~ ~ 0.9 0.9
@@ -130,24 +128,24 @@ function generateFunctionName(crushable: ICrushable) {
 }
 
 function writeBlockCrushFunctions() {
-  const codeTemplate = (c: ICrushable) => `
-  	fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ ${c.toBlock} replace ${c.fromBlock}
+  const codeTemplate = (c: ICrushable) => dedent`
+  	fill ~ ~${block_distance} ~ ~ ~${block_distance} ~ ${c.toBlock} replace ${
+    c.fromBlock
+  }
   	function renewable_sand:concrete_crush_sound
   	function renewable_sand:crush_effect
   	particle block ${c.fromBlock} ~ ~0.3 ~ 0.1 0.1 0.1 1 3
-  	${c.customCode ?? ''}
+		${c.customCode ?? ""}
 	`;
 
   crushables.forEach((c) => {
+    console.log(c);
     const file = `${generateFunctionName(c)}.mcfunction`;
-    const code =
-      c.customCode !== undefined
-        ? stripIndents(c.customCode)
-        : stripIndents(codeTemplate(c));
+    const code = c.customCode !== undefined ? c.customCode : codeTemplate(c);
 
     const path = `${NAMESPACE_FOLDER}/functions/crush/${file}`;
 
-    Deno.writeTextFile(path, `${code}\ntag @s add has_crushed`);
+    Deno.writeTextFile(path, `${code}\ntag @s add has_crushed`.trim());
   });
 }
 
@@ -156,7 +154,7 @@ function writeBlockCrushSwitch() {
 
   const cases = crushables
     .map((c) => {
-      const caseCode = `
+      const caseCode = dedent`
 				execute if score @s fall_distance matches ${
           c.fallDistance
         }.. if score @s motion_y matches ..${
@@ -169,13 +167,13 @@ function writeBlockCrushSwitch() {
     })
     .join("\n");
 
-  const code = `
+  const code = dedent`
 		execute store result score @s fall_distance run data get entity @s FallDistance 1
 		execute store result score @s motion_y run data get entity @s Motion[1] 100
 		${cases}
 	`;
 
-  Deno.writeTextFile(path, stripIndents(code));
+  Deno.writeTextFile(path, code.trim());
 }
 
 function writeCrushableTag() {
@@ -183,16 +181,16 @@ function writeCrushableTag() {
   const vals = crushables.map((c) => c.fromBlock);
   const json = { replace: false, values: vals };
 
-  Deno.writeTextFile(path, JSON.stringify(json));
+  Deno.writeTextFile(path, JSON.stringify(json, null, 2).trim());
 }
 
 function writeMainFunction() {
   const path = `${NAMESPACE_FOLDER}/functions/main_tick.mcfunction`;
-  const code = `
+  const code = dedent`
 		execute as @e[type=minecraft:falling_block,nbt={BlockState:{Name:"minecraft:anvil"}},tag=!has_crushed] at @s if block ~ ~${block_distance} ~ #renewable_sand:crushable run function renewable_sand:as_anvil/try_crush
 	`;
 
-  Deno.writeTextFile(path, stripIndents(code));
+  Deno.writeTextFile(path, code.trim());
 }
 
 writeBlockCrushFunctions();

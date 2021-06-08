@@ -1,4 +1,3 @@
-
 fill ~ ~-1 ~ ~ ~-1 ~ minecraft:cracked_stone_bricks replace minecraft:stone_bricks
 playsound minecraft:block.stone.break block @a ~ ~ ~ 0.8 1
 playsound minecraft:block.metal.place block @a ~ ~ ~ 0.9 0.9

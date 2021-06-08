@@ -1,4 +1,3 @@
-
 fill ~ ~-1 ~ ~ ~-1 ~ minecraft:cobblestone replace minecraft:stone
 function renewable_sand:concrete_crush_sound
 function renewable_sand:crush_effect
