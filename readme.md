@@ -37,3 +37,5 @@ for consistency with this new mechanic some other blocks can be crushed
 </p></details>
 
 </p></details>
+
+<!-- todo: when infested blocks are cracked, maybe have a chance to have the silverfish pop out? -->
